@@ -1,0 +1,10 @@
+Flask
+Flask-SQLAlchemy
+Flask-JWT-Extended
+psycopg2
+python-dotenv
+openai
+requests
+google-generativeai
+flask-restx
+gunicorn

@@ -1,0 +1,32 @@
+services:
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: mental_health
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  app:
+    build: .
+    environment:
+      - DATABASE_URL=postgresql://postgres:password@db:5432/mental_health
+      - SECRET_KEY=your_secret_key
+      - JWT_SECRET_KEY=your_jwt_secret_key
+      - FLASK_APP=app/__init__.py
+    ports:
+      - "5555:5555"
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
