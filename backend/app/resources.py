@@ -1,17 +1,12 @@
 from flask_restx import Namespace, Resource, fields
-import google.generativeai as genai
-from .config import Config
+from .client import GeminiAPICLient
 
 
 api = Namespace('resources', description='Google Generative AI operations')
-
-genai.configure(api_key=Config.GEMINI_API_KEY)
-
-client = genai.GenerativeModel('gemini-1.5-flash')
-
 model = api.model('Model', {
     'input': fields.String(required=True, description='Input text for the AI model'),
 })
+
 
 @api.route('/')
 class GenerativeAI(Resource):
@@ -21,6 +16,7 @@ class GenerativeAI(Resource):
         data = api.payload
         input_text = data['input']
 
-        response = client.generate_content(input_text)
+        client = GeminiAPICLient()
+        response = client.generate_text(input_text)
 
-        return {'response': response.text}
+        return {'response': response}
