@@ -35,7 +35,7 @@ def generate_question(topic):
 
     question = lines[0].replace("Question: ", "").strip()
     options = [line.strip().replace("  ", " ") for line in lines[1:5]]
-    correct_option = lines[5].replace("Correct Answer:", "").strip()
+    correct_option = lines[5].replace("Correct answer:", "").replace("Correct Answer:", "").strip()
     correct_option_idx = options.index(correct_option)
 
     return {"question": question, "options": options, "correct_option_idx": correct_option_idx}
