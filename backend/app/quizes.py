@@ -24,21 +24,29 @@ MENTAL_HEALTH_TOPICS = [
     "positive psychology"
 ]
 
-def generate_question(topic):
-    prompt = f"Generate a multiple-choice question on the topic of {topic}. Include 4 options and mark the correct answer."
-    client = GeminiAPICLient()
-    response = client.generate_text(prompt)
-    response = response.replace("**", "")
+def generate_question(topic, max_retries=3):
+    for attempt in range(max_retries):
+        try:
+            prompt = f"Generate a multiple-choice question on the topic of {topic}. Include 4 options and mark the correct answer."
+            client = GeminiAPICLient()
+            response = client.generate_text(prompt)
+            response = response.replace("**", "")
 
-    lines = response.split("\n")
-    lines = [line for line in lines if line != ""]
+            lines = response.split("\n")
+            lines = [line for line in lines if line != ""]
 
-    question = lines[0].replace("Question: ", "").strip()
-    options = [line.strip().replace("  ", " ") for line in lines[1:5]]
-    correct_option = lines[5].replace("Correct answer:", "").replace("Correct Answer:", "").strip()
-    correct_option_idx = options.index(correct_option)
+            question = lines[0].replace("Question: ", "").strip()
+            options = [line.strip().replace("  ", " ") for line in lines[1:5]]
+            correct_option = lines[5].replace("Correct answer:", "").replace("Correct Answer:", "").strip()
+            correct_option_idx = options.index(correct_option)
 
-    return {"question": question, "options": options, "correct_option_idx": correct_option_idx}
+            return {"question": question, "options": options, "correct_option_idx": correct_option_idx}
+
+        except Exception as e:
+            print(f"Attempt {attempt + 1} failed: {str(e)}")
+            if attempt == max_retries - 1:  # Last attempt
+                print(f"Failed to generate question after {max_retries} attempts")
+                return None
 
 
 @api.route('/')
