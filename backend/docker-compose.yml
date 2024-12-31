@@ -23,6 +23,18 @@ services:
       - db
     networks:
       - app-network
+    volumes:
+    - .:/app
+    command: flask run --host 0.0.0.0 --port 5555 --reload
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network
+    volumes:
+      - redis_data:/data
 
 networks:
   app-network:
@@ -30,3 +42,4 @@ networks:
 
 volumes:
   postgres_data:
+  redis_data:

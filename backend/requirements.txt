@@ -8,3 +8,5 @@ requests
 google-generativeai
 flask-restx
 gunicorn
+agora-token-builder
+redis
